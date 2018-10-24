@@ -1,18 +1,35 @@
 import sqlite3
 from tkinter import *
 from tkinter import messagebox
+from urllib.parse import urlparse
 
 
 class Passwords:
+    
+    def validation(self, url):
+        try:
+            result = urlparse(url)
+            return True
+        except:
+            destroying = Tk()
+            destroying.withdraw()
+            messagebox.showwarning('Not valid!', 'This is not a valid website!')
+            return False
+        
 
     def saving(self, url, username, password):
-        conn = sqlite3.connect('users.db')
-        query = "INSERT INTO PASSWORDS(WEBSITE, USERNAME, PASSWORD) VALUES('" + url + \
-                "','" + username + "','" + password + "')"
-        print(query)
-        conn.execute(query)
-        conn.commit()
-        conn.close()
+        if validation(url):
+            conn = sqlite3.connect('users.db')
+            query = "INSERT INTO PASSWORDS(WEBSITE, USERNAME, PASSWORD) VALUES('" + url + \
+                    "','" + username + "','" + password + "')"
+            print(query)
+            conn.execute(query)
+            conn.commit()
+            conn.close()
+        else:
+            destroying = Tk()
+            destroying.withdraw()
+            messagebox.showwarning('Cannot save', 'Cannot save credentials!')
 
     def fillpass(self):
         passgen = Tk()
